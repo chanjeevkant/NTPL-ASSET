@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.surrender-container {
+    width: 60%;
+}
+
+.dropdown-container {
+    position: relative;
+  }
+  .dropdown-toggle {
+    width: 100%;
+  }
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ced4da;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  .dropdown-item:hover {
+    background-color: #f8f9fa;
+  }
+  .dropdown-item.selected {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* AssetSurrender.css */
+
+.asset-surrender-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .asset-surrender-title {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .asset-surrender-table th {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+  }
+  
+  .asset-surrender-table td {
+    vertical-align: middle;
+  }
+  
+  .asset-surrender-table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9; /* Light background for odd rows */
+  }
+  
+  .asset-surrender-table-striped tbody tr:hover {
+    background-color: #e9ecef; /* Slightly darker on hover */
+  }
+  
+  .asset-surrender-dropdown-container {
+    position: relative;
+  }
+  
+  .asset-surrender-btn-block {
+    width: 100%;
+  }
+  

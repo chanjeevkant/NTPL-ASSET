@@ -1,0 +1,202 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f0f0; /* Light gray for contrast */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  max-width: 360px;
+  width: 90%; /* Make it responsive */
+  padding: 30px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.login-header {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column; /* Stack form elements */
+  align-items: center; /* Center form elements */
+  width: 100%; /* Full width */
+  margin-top: 20px; /* Space above the form */
+}
+
+.input-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: bold; /* Make label text bold */
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #007bff; /* Blue focus color */
+  outline: none;
+}
+
+.login-button {
+  width: 100%; /* Full width for button */
+  padding: 12px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff; /* Blue button color */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.login-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.login-type-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.login-type-button {
+  background-color: #007bff; /* Blue for buttons */
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  flex: 1; /* Allow buttons to grow */
+  border: none; /* No border for a cleaner look */
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.login-type-button.active {
+  background-color: #0056b3; /* Darker blue for active button */
+}
+
+.login-type-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.ntpl-logo {
+  max-width: 100%; /* Ensure the logo is responsive */
+  margin: 20px 0; /* Margin for spacing */
+}
+
+.error-message {
+  color: red; /* Error message color */
+  margin-top: 10px; /* Space above error message */
+}
+
+.custom-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #d4edda; /* Light green */
+  color: #155724; /* Dark green */
+  border: 1px solid #c3e6cb; /* Slightly darker green */
+  padding: 35px 40px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1050; /* Ensure it stays on top */
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Media Query for Responsive Design */
+@media (max-width: 768px) {
+  .custom-alert {
+    top: 10px; /* Adjust top spacing for smaller screens */
+    right: 10px; /* Adjust right spacing for smaller screens */
+    padding: 10px 15px; /* Smaller padding for mobile */
+    font-size: 14px; /* Smaller font size */
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-alert {
+    top: 5px; /* Further adjust for very small screens */
+    right: 5px;
+    padding: 8px 12px; /* Even smaller padding */
+    font-size: 12px; /* Even smaller font size */
+  }
+}
+
+.alert {
+  z-index: 1050; /* Ensure it stays on top */
+  transition: all 0.5s ease-in-out; /* Smooth transition */
+}
+
+.request-history-container {
+  width: 100%; /* Ensure it uses full width */
+  margin-top: 0; /* No margin on top */
+  padding: 20px; /* Padding if needed */
+}
+
+.request-history-title {
+  margin-bottom: 20px; /* Space below title */
+}
+
+.request-no-data {
+  margin-top: 20px; /* Space for no data message */
+}
+
+/* Custom styles for buttons if needed */
+.request-accept-button {
+  /* Custom styles here if desired */
+}
+
+.request-revert-button {
+  /* Custom styles here if desired */
+}
+
+.pdf-generate-button {
+  width: 100%; /* Full width for button */
+  padding: 6px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff; /* Blue button color */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.pdf-generate-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
