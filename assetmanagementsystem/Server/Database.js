@@ -3,7 +3,7 @@ const cors = require('cors');
 const sql = require('mssql');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const os = require('os');
 const PizZip = require('pizzip');
@@ -408,11 +408,25 @@ app.post('/api/accessories', async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post('/api/ClearanceCertificate', async (req, res) => {
   const { date, name, cpf, designation, division } = req.body;
 
   // Define the template path
-  const templatePath = path.join(__dirname, 'Templates', 'ClearanceCertificateTemplate.docx');
+  const templatePath = path.join(__dirname, 'Templates', 'ClearanceCertificate.docx');
   const uploadsDir = path.join(__dirname, 'uploads');
 
   // Ensure the uploads directory exists
@@ -423,14 +437,21 @@ app.post('/api/ClearanceCertificate', async (req, res) => {
   const tempPdfPath = path.join(uploadsDir, `ClearanceCertificate_${Date.now()}.pdf`);
 
   try {
-      // Create the report using the template and data
-      const buffer = await createReport({
-          template: templatePath,
-          data: { date, name, cpf, designation, division },
+      // Load the existing template document
+      const templateBuffer = fs.readFileSync(templatePath);
+      const zip = new PizZip(templateBuffer);
+      const doc = new Docxtemplater(zip, { paragraphLoop: true, lineBreaks: true });
+
+      // Populate the fields in the document
+      doc.render({
+          date, name, cpf, designation, division
       });
 
+      // Generate the buffer for the modified document
+      const outputBuffer = doc.getZip().generate({ type: 'nodebuffer' });
+
       // Write the modified document to a new file
-      await fs.writeFile(modifiedDocPath, buffer);
+      await fs.writeFile(modifiedDocPath, outputBuffer);
 
       // Convert the modified document to PDF
       docxConverter(modifiedDocPath, tempPdfPath, (err) => {
@@ -456,7 +477,6 @@ app.post('/api/ClearanceCertificate', async (req, res) => {
       res.status(500).send('Error processing document: ' + error.message);
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

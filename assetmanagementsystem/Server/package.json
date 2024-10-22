@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "docx-pdf": "^0.0.1",
+    "docx-template": "^2.2.5",
     "docx-templates": "^4.13.0",
     "docxtemplater": "^3.51.0",
     "express": "^4.21.1",
