@@ -12,6 +12,7 @@ const docxConverter = require('docx-pdf');
 const officegen = require('officegen');
 const { PassThrough } = require('stream');
 const { createReport } = require('docx-templates');
+const { Console } = require('console');
 const app = express();
 const port = 5000;
 
@@ -112,7 +113,7 @@ app.get('/api/assetDropdown', async (req, res) => {
    request.input('cpf', sql.VarChar, cpf);
    
    const query = `
-     SELECT [PC ID]
+     SELECT [CPU BRAND DETAILS],[MONITOR SIZE],[PROCESSOR TYPE],[UPS],[PRINTER MODEL]
      FROM asset_details WHERE [CPF NO] = @cpf 
    `;
    const result = await request.query(query);
@@ -149,6 +150,24 @@ app.get('/api/pendingRequests', async (req, res) => {
     console.error('Error fetching data:', err);
     res.status(500).json({ error: 'Error fetching data' });
   }
+  });
+
+  app.get('/api/freeAssetList', async (req, res) => {
+    try{
+    const request = new sql.Request();
+    const query = `
+        SELECT DISTINCT * FROM [Free_Asset_List];
+      `;
+    const result = await request.query(query);
+    if (result.recordset.length == 0) {
+      return res.status(404).json({ error: 'No data found' });
+    }
+    res.json(result.recordset);
+    }
+    catch(err){
+      console.error("Error:", err);
+      res.status(500).json({ message: 'Server error', auth: '0' });
+    }
   });
 
   app.get('/api/requestHistory', async (req, res) => {
@@ -408,18 +427,93 @@ app.post('/api/accessories', async (req, res) => {
 });
 
 
+app.post('/api/assetTransfer', async (req, res) => {
+  try {
+    const { name, designation, cpf, division, assets } = req.body;
+    
+    
+    // Initialize asset details with 'Nil' for all optional fields
+    const assetDetails = {
+      'Pc Id':'Nil',
+      'Monitor Size': 'Nil',
+      'Processor Type': 'Nil',
+      'CPU Brand Details': 'Nil',
+      'UPS': 'Nil',
+      'Printer Model': 'Nil',
+      'IP Details': 'Nil',
+      'MAC Address': 'Nil',
+      'HDD Spec': 'Nil',
+      'RAM': 'Nil',
+      'Windows OS Version': 'Nil',
+      'MS Office': 'Nil',
+      'Other Installed Software Details': 'Nil',
+      'Wireless Modem': 'Nil',
+      'V/C Speaker': 'Nil',
+      'F23': 'Nil',
+      'F24': 'Nil',
+    };
 
+    console.log(assets);
+    // Update asset details based on the provided assets
+    if (assets && typeof assets === 'object') {
+      assetDetails['Pc Id'] = assets['PC ID']|| assetDetails['Pc Id'];
+      assetDetails['Monitor Size'] = assets.Monitor || assetDetails['Monitor Size'];
+      assetDetails['Processor Type'] = assets.Processor || assetDetails['Processor Type'];
+      assetDetails['CPU Brand Details'] = assets.CPU || assetDetails['CPU Brand Details'];
+      assetDetails['CPU Brand Details'] = assets.Printer || assetDetails['CPU Brand Details'];
+      assetDetails['CPU Brand Details'] = assets.UPS || assetDetails['CPU Brand Details'];
+    }
 
+    // Insert the data into the database
+    const query = `
+      INSERT INTO [dbo].[asset_details]
+  ([PC ID],[NAME], [CPF NO], [DIVISION], [MONITOR SIZE], [PROCESSOR TYPE], 
+         [CPU BRAND DETAILS], [UPS], [PRINTER MODEL], 
+         [IP DETAILS], [MAC ADDRESS], [HDD SPEC], [RAM], 
+         [WINDOWS OS VERSION], [MS OFFICE], 
+         [OTHER INSTALLED SOFTWARE DETAILS], [WIRELESS MODEM], 
+         [V/C SPEAKER], [F23], [F24])
+      VALUES
+        (@PC_ID,@NAME, @CPF_NO, @DIVISION, @MONITOR_SIZE, @PROCESSOR_TYPE, 
+         @CPU_BRAND_DETAILS, @UPS, @PRINTER_MODEL, 
+         @IP_DETAILS, @MAC_ADDRESS, @HDD_SPEC, @RAM, 
+         @WINDOWS_OS_VERSION, @MS_OFFICE, 
+         @OTHER_INSTALLED_SOFTWARE_DETAILS, @WIRELESS_MODEM, 
+         @V_C_SPEAKER, @F23, @F24);
+    `;
 
+    const request = new sql.Request();
+    request.input('PC_ID', sql.NVarChar(255), assetDetails['Pc Id']);
+    request.input('NAME', sql.NVarChar(255), name);
+    request.input('CPF_NO', sql.NVarChar(255), cpf);
+    request.input('DIVISION', sql.NVarChar(255), division);
+    request.input('MONITOR_SIZE', sql.NVarChar(255), assetDetails['Monitor Size']);
+    request.input('PROCESSOR_TYPE', sql.NVarChar(255), assetDetails['Processor Type']);
+    request.input('CPU_BRAND_DETAILS', sql.NVarChar(255), assetDetails['CPU Brand Details']);
+    request.input('UPS', sql.NVarChar(255), assetDetails['UPS']);
+    request.input('PRINTER_MODEL', sql.NVarChar(255), assetDetails['Printer Model']);
+    request.input('IP_DETAILS', sql.NVarChar(255), assetDetails['IP Details']);
+    request.input('MAC_ADDRESS', sql.NVarChar(255), assetDetails['MAC Address']);
+    request.input('HDD_SPEC', sql.NVarChar(255), assetDetails['HDD Spec']);
+    request.input('RAM', sql.NVarChar(255), assetDetails['RAM']);
+    request.input('WINDOWS_OS_VERSION', sql.NVarChar(255), assetDetails['Windows OS Version']);
+    request.input('MS_OFFICE', sql.NVarChar(255), assetDetails['MS Office']);
+    request.input('OTHER_INSTALLED_SOFTWARE_DETAILS', sql.NVarChar(255), assetDetails['Other Installed Software Details']);
+    request.input('WIRELESS_MODEM', sql.NVarChar(255), assetDetails['Wireless Modem']);
+    request.input('V_C_SPEAKER', sql.NVarChar(255), assetDetails['V/C Speaker']);
+    request.input('F23', sql.NVarChar(255), assetDetails['F23']);
+    request.input('F24', sql.NVarChar(255), assetDetails['F24']);
 
+    // Execute the insert query
+    await request.query(query);
+    console.log('Asset Details Transfered Succesfully');
 
-
-
-
-
-
-
-
+    res.status(200).json({ message: 'Asset transfer details processed successfully' });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ message: 'Server error', auth: '0' });
+  }
+});
 
 
 app.post('/api/ClearanceCertificate', async (req, res) => {
@@ -458,16 +552,12 @@ app.post('/api/ClearanceCertificate', async (req, res) => {
           if (err) {
               return res.status(500).send('Error converting document to PDF: ' + err.message);
           }
-
-          // Set the response headers for the PDF download
           res.set({
               'Content-Type': 'application/pdf',
               'Content-Disposition': `attachment; filename=ClearanceCertificate_${Date.now()}.pdf`,
           });
 
-          // Send the PDF to the client
           res.download(tempPdfPath, (err) => {
-              // Clean up temporary files after sending
               fs.unlink(modifiedDocPath, () => {});
               fs.unlink(tempPdfPath, () => {});
           });

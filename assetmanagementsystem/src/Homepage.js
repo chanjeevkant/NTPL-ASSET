@@ -37,6 +37,7 @@ function Homepage() {
         setData(dataResult);
         setError('');
       }
+      console.log(dataResult)
     } catch (err) {
       console.log(err);
       setError('Error fetching data');

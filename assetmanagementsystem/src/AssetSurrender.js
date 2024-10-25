@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './App.js';
 import './AssetSurrender.css'; // Import your custom CSS
 
 const AssetSurrender = () => {
   const navigate = useNavigate();
+  const { client} = useAuth();
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
   const [designation, setDesignation] = useState('');
@@ -47,6 +49,7 @@ const AssetSurrender = () => {
     const response = await fetch(`http://172.16.250.247:5000/api/assetDropdown?cpf=${cpf}`);
     const data = await response.json();
     setAssetDetails(data);
+    console.log(data);
   };
 
   const handleCpfChange = (e) => {
@@ -65,6 +68,7 @@ const AssetSurrender = () => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const surrenderEntries = {
       name: name,
       cpf: cpf,
@@ -104,6 +108,16 @@ const AssetSurrender = () => {
 )}
       <h2 className="asset-surrender-title text-center mb-4">Asset Surrender Form</h2>
       <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow">
+      <div className="form-group asset-surrender-form-group">
+          <label>CPF:</label>
+          <input
+            type="number"
+            className="form-control"
+            value={cpf}
+            onChange={handleCpfChange}
+            required
+          />
+        </div>
         <div className="form-group asset-surrender-form-group">
           <label>Name:</label>
           <input
@@ -111,16 +125,6 @@ const AssetSurrender = () => {
             className="form-control"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group asset-surrender-form-group">
-          <label>CPF:</label>
-          <input
-            type="number"
-            className="form-control"
-            value={cpf}
-            onChange={handleCpfChange}
             required
           />
         </div>
@@ -137,18 +141,62 @@ const AssetSurrender = () => {
         <div className="form-group asset-surrender-form-group">
           <label>Asset Details:</label><label>(press 'ctrl' to select multiple assets)</label>
           <select
-            multiple
-            className="form-control"
-            value={selectedAssets}
-            onChange={handleSelectChange}
-            style={{ height: '150px' }} // Adjust height for better visibility
-          >
-            {assetDetails && assetDetails.map(asset => (
-              <option key={asset["PC ID"]} value={asset["PC ID"]}>
-                {asset["PC ID"]}
-              </option>
-            ))}
-          </select>
+  multiple
+  className="form-control"
+  value={selectedAssets}
+  onChange={handleSelectChange}
+  style={{ height: '150px' }} 
+>
+  <optgroup label="CPU">
+    {assetDetails.map(asset => (
+      asset["CPU BRAND DETAILS"] && (
+        <option key={asset["CPU BRAND DETAILS"]} value={asset["CPU BRAND DETAILS"]}>
+          {asset["CPU BRAND DETAILS"]}
+        </option>
+      )
+    ))}
+  </optgroup>
+  
+  <optgroup label="Monitor">
+    {assetDetails.map(asset => (
+      asset["MONITOR SIZE"] && (
+        <option key={asset["MONITOR SIZE"]} value={asset["MONITOR SIZE"]}>
+          {asset["MONITOR SIZE"]}
+        </option>
+      )
+    ))}
+  </optgroup>
+
+  <optgroup label="Printer">
+    {assetDetails.map(asset => (
+      asset["PRINTER MODEL"] && (
+        <option key={asset["PRINTER MODEL"]} value={asset["PRINTER MODEL"]}>
+          {asset["PRINTER MODEL"]}
+        </option>
+      )
+    ))}
+  </optgroup>
+
+  <optgroup label="Processor">
+    {assetDetails.map(asset => (
+      asset["PROCESSOR TYPE"] && (
+        <option key={asset["PROCESSOR TYPE"]} value={asset["PROCESSOR TYPE"]}>
+          {asset["PROCESSOR TYPE"]}
+        </option>
+      )
+    ))}
+  </optgroup>
+
+  <optgroup label="UPS">
+    {assetDetails.map(asset => (
+      asset["UPS"] && (
+        <option key={asset["UPS"]} value={asset["UPS"]}>
+          {asset["UPS"]}
+        </option>
+      )
+    ))}
+  </optgroup>
+</select>
         </div>
         <div className="form-group asset-surrender-form-group">
           <label>Surrender Remarks:</label>
